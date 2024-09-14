@@ -20,16 +20,16 @@ spec:
             - containerPort: 5000
           env:
             - name: DB_HOST
-              value: "three-tier-postgres-postgresql"  # The service name created by the Helm chart
+              value: "postgres"  # Use the service name from the database YAML
             - name: DB_NAME
               value: "mydatabase"
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: three-tier-postgres  # Helm chart creates a secret with the release name
-                  key: postgresql-username
+                  name: postgres-secret  # Matches the secret in the database YAML
+                  key: postgres-user
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: three-tier-postgres  # Helm chart creates a secret with the release name
-                  key: postgresql-password
+                  name: postgres-secret  # Matches the secret in the database YAML
+                  key: postgres-password
