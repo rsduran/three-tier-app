@@ -11,7 +11,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /backend
+          - path: /api/tasks
             pathType: Prefix
             backend:
               service:

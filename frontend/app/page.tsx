@@ -10,7 +10,7 @@ export default function Home() {
   const [editTaskId, setEditTaskId] = useState<number | null>(null);
   const [editTaskContent, setEditTaskContent] = useState(''); // New state for editing task content
   const [loading, setLoading] = useState(false);
-  const backendUrl = 'http://localhost:5000';
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '/api';
 
   useEffect(() => {
     fetchTasks();
