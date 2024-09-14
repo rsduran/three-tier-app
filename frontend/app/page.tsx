@@ -19,7 +19,7 @@ export default function Home() {
   const fetchTasks = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${backendUrl}/tasks`);
+      const response = await fetch(`${backendUrl}/api/tasks`);
       const data = await response.json();
       setTasks(data);
     } catch (error) {
@@ -35,7 +35,7 @@ export default function Home() {
       setLoading(true);
       if (editTaskId !== null) {
         // Update task
-        await fetch(`${backendUrl}/tasks/${editTaskId}`, {
+        await fetch(`${backendUrl}/api/tasks/${editTaskId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ content: editTaskContent }),
@@ -44,7 +44,7 @@ export default function Home() {
         setEditTaskContent('');
       } else {
         // Add new task
-        const response = await fetch(`${backendUrl}/tasks`, {
+        const response = await fetch(`${backendUrl}/api/tasks`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ content: newTask }),
@@ -62,7 +62,7 @@ export default function Home() {
 
   const deleteTask = async (id) => {
     try {
-      await fetch(`${backendUrl}/tasks/${id}`, {
+      await fetch(`${backendUrl}/api/tasks/${id}`, {
         method: 'DELETE',
       });
       setTasks(tasks.filter((task) => task.id !== id));
@@ -85,7 +85,7 @@ export default function Home() {
 
     try {
       setLoading(true);
-      await fetch(`${backendUrl}/tasks/${id}`, {
+      await fetch(`${backendUrl}/api/tasks/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: editTaskContent }),
