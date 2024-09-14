@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://charts.bitnami.com/bitnami
     chart: postgresql
-    targetRevision: 12.1.10  # You can specify the version or use "latest"
+    targetRevision: "latest"  # You can specify the version or use "latest"
     helm:
       values: |
         postgresqlUsername: user
