@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: three-tier
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:latest
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: postgres-user
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: postgres-password
+        - name: POSTGRES_DB
+          value: "mydatabase"
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-storage
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "until pg_isready -U $POSTGRES_USER -h localhost; do echo 'Waiting for postgres...'; sleep 2; done; \
+                        psql -U $POSTGRES_USER -d $POSTGRES_DB -c \"CREATE USER user WITH PASSWORD 'password';\"; \
+                        psql -U $POSTGRES_USER -d $POSTGRES_DB -c \"GRANT ALL PRIVILEGES ON DATABASE $POSTGRES_DB TO user;\"; \
+                        psql -U $POSTGRES_USER -d $POSTGRES_DB -c \"GRANT ALL PRIVILEGES ON SCHEMA public TO user;\""]
+      volumes:
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: postgres-pvc
