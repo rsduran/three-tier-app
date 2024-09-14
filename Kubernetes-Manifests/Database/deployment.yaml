@@ -13,7 +13,6 @@ spec:
       labels:
         app: postgres
     spec:
-      # Add initContainers here
       initContainers:
         - name: init-postgres
           image: postgres:latest

@@ -10,15 +10,3 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: /mnt/data/postgres
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-pvc
-  namespace: three-tier
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi
