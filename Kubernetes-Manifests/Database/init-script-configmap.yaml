@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-script
+  namespace: three-tier
+data:
+  init-db.sh: |
+    #!/bin/bash
+    set -e
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
+      CREATE DATABASE mydatabase;
+      CREATE USER "user" WITH PASSWORD 'password';
+      GRANT ALL PRIVILEGES ON DATABASE mydatabase TO "user";
+    EOSQL
