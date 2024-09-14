@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgres
+  namespace: argocd  # Ensure this is the namespace where Argo CD is installed
+spec:
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: postgresql
+    targetRevision: 12.1.10  # You can specify the version or use "latest"
+    helm:
+      values: |
+        postgresqlUsername: user
+        postgresqlPassword: password
+        postgresqlDatabase: mydatabase
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: three-tier
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
