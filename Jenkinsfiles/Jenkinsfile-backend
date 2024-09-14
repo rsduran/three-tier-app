@@ -5,7 +5,7 @@ pipeline {
         nodejs 'nodejs'
     }
     environment  {
-        DOCKER_REPO_NAME = 'rsduran/three-tier-frontend'  
+        DOCKER_REPO_NAME = 'rsduran/three-tier-backend'  
         DOCKERHUB_CREDENTIALS_ID = 'docker'    
     }
     stages {
