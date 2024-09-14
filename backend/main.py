@@ -62,6 +62,27 @@ def add_task():
 
     return jsonify({'id': task_id, 'content': content})
 
+@app.route('/api/tasks/<int:task_id>', methods=['PUT'])
+def update_task(task_id):
+    data = request.json
+    content = data.get('content')
+
+    if not content:
+        return jsonify({'error': 'Task content is required'}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('UPDATE tasks SET content = %s WHERE id = %s RETURNING id, content', (content, task_id))
+    updated_task = cursor.fetchone()
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    if updated_task:
+        return jsonify({'id': updated_task[0], 'content': updated_task[1]})
+    else:
+        return jsonify({'error': 'Task not found'}), 404
+
 @app.route('/api/tasks/<int:task_id>', methods=['DELETE'])
 def delete_task(task_id):
     conn = get_db_connection()
