@@ -8,6 +8,7 @@ export default function Home() {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
   const [editTaskId, setEditTaskId] = useState<number | null>(null);
+  const [editTaskContent, setEditTaskContent] = useState(''); // New state for editing task content
   const [loading, setLoading] = useState(false);
   const backendUrl = 'http://localhost:5000';
 
@@ -37,9 +38,10 @@ export default function Home() {
         await fetch(`${backendUrl}/api/tasks/${editTaskId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content: newTask }),
+          body: JSON.stringify({ content: editTaskContent }),
         });
         setEditTaskId(null);
+        setEditTaskContent('');
       } else {
         // Add new task
         const response = await fetch(`${backendUrl}/api/tasks`, {
@@ -71,7 +73,30 @@ export default function Home() {
 
   const startEditing = (task) => {
     setEditTaskId(task.id);
-    setNewTask(task.content);
+    setEditTaskContent(task.content); // Set the content of the task being edited
+  };
+
+  const handleEditChange = (event) => {
+    setEditTaskContent(event.target.value);
+  };
+
+  const updateTask = async (id) => {
+    if (!editTaskContent) return;
+
+    try {
+      setLoading(true);
+      await fetch(`${backendUrl}/api/tasks/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: editTaskContent }),
+      });
+      setEditTaskId(null);
+      setEditTaskContent('');
+      fetchTasks(); // Refresh the task list
+    } catch (error) {
+      console.error('Failed to update task:', error);
+    }
+    setLoading(false);
   };
 
   return (
@@ -80,7 +105,7 @@ export default function Home() {
       <VStack spacing={4} align="stretch" width="100%">
         <HStack>
           <Input
-            placeholder="Add or update a task"
+            placeholder="Add a new task"
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
           />
@@ -89,16 +114,32 @@ export default function Home() {
           </Button>
         </HStack>
         {loading ? (
-          <Spinner size="xl" />
+          <Box display="flex" justifyContent="center" alignItems="center" height="200px">
+            <Spinner size="xl" />
+          </Box>
         ) : (
           tasks.map((task) => (
             <Box key={task.id} p={3} shadow="md" borderWidth="1px">
               <HStack justify="space-between">
-                <Text>{task.content}</Text>
+                {editTaskId === task.id ? (
+                  <Input
+                    value={editTaskContent}
+                    onChange={handleEditChange}
+                    placeholder="Edit task"
+                  />
+                ) : (
+                  <Text>{task.content}</Text>
+                )}
                 <HStack>
-                  <Button size="sm" onClick={() => startEditing(task)}>
-                    Edit
-                  </Button>
+                  {editTaskId === task.id ? (
+                    <Button size="sm" onClick={() => updateTask(task.id)}>
+                      Save
+                    </Button>
+                  ) : (
+                    <Button size="sm" onClick={() => startEditing(task)}>
+                      Edit
+                    </Button>
+                  )}
                   <Button colorScheme="red" size="sm" onClick={() => deleteTask(task.id)}>
                     Delete
                   </Button>
@@ -111,3 +152,5 @@ export default function Home() {
     </Container>
   );
 }
+
+

@@ -5,9 +5,6 @@ import localFont from 'next/font/local';
 import { ChakraProvider } from '@chakra-ui/react';
 import './globals.css';
 
-// Import metadata separately
-import { metadata } from './metadata';
-
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
   variable: '--font-geist-sans',
