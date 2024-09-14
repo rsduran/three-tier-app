@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 # Database connection settings
-DB_HOST = os.getenv('DB_HOST', 'localhost')
+DB_HOST = os.getenv('DB_HOST', 'postgres')
 DB_NAME = os.getenv('DB_NAME', 'mydatabase')
 DB_USER = os.getenv('DB_USER', 'user')
 DB_PASS = os.getenv('DB_PASS', 'password')
