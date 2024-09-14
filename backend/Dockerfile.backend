@@ -12,11 +12,14 @@ COPY requirements.txt ./
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install gunicorn for production
+RUN pip install gunicorn
+
 # Copy the rest of the application files
 COPY . .
 
 # Expose the port the backend runs on
 EXPOSE 5000
 
-# Start the application
-CMD ["python", "main.py"]
+# Start the application with Gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "main:app"]
