@@ -36,6 +36,9 @@ def init_db():
     cursor.close()
     conn.close()
 
+# Call init_db when the app is created to ensure the table exists
+init_db()
+
 @app.route('/api/tasks', methods=['GET'])
 def get_tasks():
     conn = get_db_connection()
@@ -96,5 +99,5 @@ def delete_task(task_id):
     return '', 204
 
 if __name__ == '__main__':
-    init_db()
     app.run(host='0.0.0.0', port=5000)
+
