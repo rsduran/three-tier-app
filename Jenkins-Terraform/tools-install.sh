@@ -37,4 +37,3 @@ eksctl version
 
 # Install Helm
 sudo snap install helm --classic
-
