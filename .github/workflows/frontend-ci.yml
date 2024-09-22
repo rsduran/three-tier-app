@@ -1,9 +1,10 @@
 name: Frontend CI
 
 on:
-  push:
-    branches:
-      - main
+    push:
+      branches:
+        - main
+    workflow_dispatch: # This allows the workflow to be triggered manually
 
 jobs:
   frontend-ci:
