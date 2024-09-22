@@ -17,7 +17,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Clean workspace
         run: git clean -fdx
@@ -43,8 +43,8 @@ jobs:
           cd Kubernetes-Manifests/Frontend
           git config user.email "reineirsamonteduran@gmail.com"
           git config user.name "rsduran"
-          imageTag=$(grep -oP '(?<=frontend:)[^ ]+' deployment.yaml)
-          sed -i "s|rsduran/three-tier-frontend:${imageTag}|rsduran/three-tier-frontend:${{ github.run_number }}|" deployment.yaml
+          # Use sed to directly replace the entire line with the new image
+          sed -i "s|image: rsduran/three-tier-frontend:.*|image: rsduran/three-tier-frontend:${{ github.run_number }}|" deployment.yaml
           git add deployment.yaml
           git diff --quiet && git diff --staged --quiet || git commit -m "Update frontend image to version ${{ github.run_number }}"
 
