@@ -41,4 +41,4 @@ jobs:
           sed -i "s|rsduran/three-tier-backend:${imageTag}|rsduran/three-tier-backend:${{ github.run_number }}|" deployment.yaml
           git add deployment.yaml
           git commit -m "Update backend image to version ${{ github.run_number }}"
-          git push https://rsduran:${{ secrets.MY_GITHUB_TOKEN }}@github.com/rsduran/three-tier-app.git
+          git push https://rsduran:${{ secrets.GITHUB_TOKEN }}@github.com/rsduran/three-tier-app.git
