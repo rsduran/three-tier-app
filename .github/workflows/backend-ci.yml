@@ -38,8 +38,9 @@ jobs:
           cd Kubernetes-Manifests/Backend
           git config user.email "reineirsamonteduran@gmail.com"
           git config user.name "rsduran"
-          # Use sed to directly replace the entire line with the new image tag
-          sed -i "s|image: rsduran/three-tier-backend:.*|image: rsduran/three-tier-backend:${{ github.run_number }}|" deployment.yaml
+          # Use grep to find the current image tag and update it
+          imageTag=$(grep -oP '(?<=backend:)[^ ]+' deployment.yaml)
+          sed -i "s|rsduran/three-tier-backend:${imageTag}|rsduran/three-tier-backend:${{ github.run_number }}|" deployment.yaml
           git add deployment.yaml
           git diff --quiet && git diff --staged --quiet || git commit -m "Update backend image to version ${{ github.run_number }}"
 
