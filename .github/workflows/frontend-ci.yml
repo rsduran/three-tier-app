@@ -1,0 +1,49 @@
+name: Frontend CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  frontend-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Clean workspace
+        run: git clean -fdx
+
+      - name: Build Docker image
+        run: |
+          cd frontend
+          docker system prune -f
+          docker container prune -f
+          docker build -t rsduran/three-tier-frontend:${{ github.run_number }} -f Dockerfile.frontend .
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Push Docker image to DockerHub
+        run: docker push rsduran/three-tier-frontend:${{ github.run_number }}
+
+      - name: Update Kubernetes deployment
+        run: |
+          cd Kubernetes-Manifests/Frontend
+          git config user.email "reineirsamonteduran@gmail.com"
+          git config user.name "rsduran"
+          imageTag=$(grep -oP '(?<=frontend:)[^ ]+' deployment.yaml)
+          sed -i "s|rsduran/three-tier-frontend:${imageTag}|rsduran/three-tier-frontend:${{ github.run_number }}|" deployment.yaml
+          git add deployment.yaml
+          git commit -m "Update frontend image to version ${{ github.run_number }}"
+          git push https://rsduran:${{ secrets.MY_GITHUB_TOKEN }}@github.com/rsduran/three-tier-app.git
