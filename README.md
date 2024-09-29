@@ -1,6 +1,6 @@
 ## Description
 
-A basic three-tier to-do webapp built as an end-to-end DevOps project, showcasing containerization, CI/CD, and Kubernetes orchestration. This project demonstrates modern DevOps practices like Infrastructure as Code (IaC), automated testing, and monitoring, deployed on a Kubernetes cluster.
+A fundamental three-tier to-do webapp built as an end-to-end DevOps project, showcasing containerization, CI/CD, and Kubernetes orchestration. This project demonstrates modern DevOps practices like Infrastructure as Code (IaC), automated testing, and monitoring, deployed on a Kubernetes cluster.
 
 ## Project Structure
 
