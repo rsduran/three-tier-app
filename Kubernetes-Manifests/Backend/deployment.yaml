@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: rsduran/three-tier-backend:9
+          image: rsduran/three-tier-backend:12
           ports:
             - containerPort: 5000
           env:
